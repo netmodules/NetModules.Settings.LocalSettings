@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\reblGreen.NetCore.Modules.LocalSettings\reblGreen.NetCore.Modules.LocalSettings.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
