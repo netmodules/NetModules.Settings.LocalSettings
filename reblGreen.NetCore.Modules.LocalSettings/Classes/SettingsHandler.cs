@@ -55,7 +55,7 @@ namespace reblGreen.NetCore.Modules.LocalSettings.Classes
                             {
                                 // We check here to see if the setting already exists and if it does then we update it,
                                 // otherwise we add it to the settings for the current module
-                                if(ModuleSettings[m].ContainsKey(kv.Key))
+                                if (ModuleSettings[m].ContainsKey(kv.Key))
                                 {
                                     ModuleSettings[m][kv.Key] = kv.Value;
                                 }

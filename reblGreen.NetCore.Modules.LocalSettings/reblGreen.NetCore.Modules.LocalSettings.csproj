@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>John Earnshaw</Authors>
+    <Company>reblGreen Software Ltd</Company>
+    <Copyright>reblGreen Software Ltd</Copyright>
+    <Description>A basic settings module which loads local configuration files into memory. This module handles the reblGreen.NetCore.Modules.Events.GetSettingEvent and configuration files must be JSON object formatted with a filename which starts with the module's name and has a .json extension.</Description>
+    <PackageIconUrl>https://avatars1.githubusercontent.com/u/31241141</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
