@@ -5,9 +5,23 @@ using reblGreen.NetCore.Modules.LocalSettings.Classes;
 
 namespace reblGreen.NetCore.Modules.LocalSettings
 {
+    /// <summary>
+    /// A module which loads local settings from JSON configuration files with {ModuleName}.*.json, where * is anything such as
+    /// if we were loading settings for this module the configuration filename would be
+    /// reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.json or
+    /// reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.default.json and configuration filename containing
+    /// *.default.* is loaded first, where settings are overwritten by any configuration files loaded in sequence.
+    /// 
+    /// This module loads with the highest priority of short.MaxValue and handles GetSettingEvent with the lowest priority of
+    /// short.MinValue, this is so that the module is ready to provide settings to all other modules while they are loading
+    /// and if another module is loaded which handles GetSettingEvent, the newly loaded module would take presidence. This is
+    /// useful for example, if you would like to load a module with a high priority which loads settings for other modules from
+    /// a remote server or database. This module would provide settings to the remote settings module, which would then load and
+    /// take over the GetSettingsEvent handling for all other modules."
+    /// </summary>
     [Serializable]
     [Module(
-        LoadPriority = 1000, HandlePriority = -1000,
+        LoadPriority = short.MaxValue, HandlePriority = short.MinValue,
         Description = "A basic settings module which loads local configuration files into memory. This module handles "
         + "the reblGreen.NetCore.Modules.Events.GetSettingEvent and configuration files must be JSON object formatted "
         + "with a filename which starts with the module's name and has a .json extension. Multiple configuration files "
@@ -20,7 +34,13 @@ namespace reblGreen.NetCore.Modules.LocalSettings
             + "merged with the default settings, replacing any pre-existing setting.",
             "While it is not part of JSON architecture, it is possible to add single line and multiline comments to your configuration "
             + "files and these comments will be stripped from the configuration file using reblGreen.Serialization.Json.MinifyJson() "
-            + "before parsing the JSON object into memory using reblGreen.Serialization.Json.ToDictionary() string extension method."
+            + "before parsing the JSON object into memory using reblGreen.Serialization.Json.ToDictionary() string extension method.",
+            "This module loads with the highest priority of short.MaxValue and handles GetSettingEvent with the lowest priority of "
+            + "short.MinValue, this is so that the module is ready to provide settings to all other modules while they are loading "
+            + "and if another module is loaded which handles GetSettingEvent, the newly loaded module would take presidence. This is "
+            + "useful for example, if you would like to load a module with a high priority which loads settings for other modules from "
+            + "a remote server or database. This module would provide settings to the remote settings module, which would then load and "
+            + "take over the GetSettingsEvent handling for all other modules."
         }
     )]
     public class SettingsModule : Module
