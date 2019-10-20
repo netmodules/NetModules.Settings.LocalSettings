@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.0.0" />
+    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.0.2" />
     <PackageReference Include="reblGreen.Serialization.Json" Version="1.0.7" />
   </ItemGroup>
 
