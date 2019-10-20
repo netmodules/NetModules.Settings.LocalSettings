@@ -65,9 +65,9 @@ namespace reblGreen.NetCore.Modules.LocalSettings
                     && !string.IsNullOrWhiteSpace(@event.Input.ModuleName)
                     && !string.IsNullOrWhiteSpace(@event.Input.SettingName))
                 {
-                    var setting = SettingsHandler.GetSetting(@event.Input.ModuleName, @event.Input.SettingName);
+                    var setting = SettingsHandler.GetSetting(@event.Input.ModuleName, @event.Input.SettingName, out bool hasSetting);
 
-                    if (setting != null)
+                    if (hasSetting)
                     {
                         @event.Output = new GetSettingEventOutput();
                         @event.Output.Setting = setting;
@@ -75,9 +75,13 @@ namespace reblGreen.NetCore.Modules.LocalSettings
                     }
                     else
                     {
+                        var message = string.Format("Setting with name {0} not found for module {1}"
+                            , @event.Input.SettingName, @event.Input.ModuleName);
+
+                        Log(LoggingEvent.Severity.Debug, message);
+
                         @event.SetMetaValue("reblGreen.NetCore.Modules.LocalSettings.SettingsModule"
-                            , string.Format("Setting with name {0} not found for module {1}"
-                            , @event.Input.SettingName, @event.Input.ModuleName));
+                            , string.Format(message));
                     }
                 }
             }
