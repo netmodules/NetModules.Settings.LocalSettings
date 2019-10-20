@@ -29,14 +29,15 @@ namespace reblGreen.NetCore.Modules.LocalSettings.Classes
         /// </summary>
         internal void LoadJsonSettingsForKnownModules()
         {
-            var moduleNames = Module.Host.Modules.GetModuleNames();
+            var moduleNames = Module.Host.Modules.GetModuleNames().Select(m => m.ToString());
             var files = Directory.GetFiles(Module.Host.WorkingDirectory.LocalPath, "*.json", SearchOption.AllDirectories);
 
-            files = files.Where(f => moduleNames.Any(m => Path.GetFileNameWithoutExtension(f).ToLower().StartsWith(m.ToString().ToLower()))).ToArray();
+            files = files.Where(f => moduleNames.Any(m => Path.GetFileNameWithoutExtension(f).StartsWith(m, StringComparison.OrdinalIgnoreCase))).ToArray();
 
             foreach (var m in moduleNames)
             {
-                var settings = files.Where(f => Path.GetFileNameWithoutExtension(f).ToLower().StartsWith(m.ToString().ToLower()))
+                // Get the setting files json for the individual module and load them into the dictionary by order of default first.
+                var settings = files.Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(m, StringComparison.OrdinalIgnoreCase))
                     .OrderByDescending(f => f.IndexOf(".default.", StringComparison.OrdinalIgnoreCase) > -1);
 
                 if (settings != null && settings.Count() > 0)
@@ -81,16 +82,18 @@ namespace reblGreen.NetCore.Modules.LocalSettings.Classes
         /// <summary>
         /// 
         /// </summary>
-        internal object GetSetting(ModuleName moduleName, string settingName)
+        internal object GetSetting(ModuleName moduleName, string settingName, out bool hasSetting)
         {
             if (ModuleSettings.ContainsKey(moduleName))
             {
                 if (ModuleSettings[moduleName].TryGetValue(settingName, out object value))
                 {
+                    hasSetting = true;
                     return value;
                 }
             }
 
+            hasSetting = false;
             return null;
         }
 
@@ -98,13 +101,27 @@ namespace reblGreen.NetCore.Modules.LocalSettings.Classes
         /// <summary>
         /// 
         /// </summary>
-        public string LoadResourceAsString(string resource)
+        public string LoadResourceAsString(params string[] path)
         {
-            var path = Path.Combine(Module.WorkingDirectory.LocalPath, resource);
+            string file;
 
-            if (File.Exists(path))
+            if (path.Length > 1)
             {
-                return File.ReadAllText(path);
+                file = string.Join(Path.DirectorySeparatorChar, path);
+            }
+            else
+            {
+                file = path[0];
+            }
+
+            if (!Path.IsPathRooted(file))
+            {
+                file = Path.Combine(Module.WorkingDirectory.LocalPath, file);
+            }
+
+            if (File.Exists(file))
+            {
+                return File.ReadAllText(file);
             }
 
             return null;
