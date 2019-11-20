@@ -61,16 +61,17 @@ namespace reblGreen.NetCore.Modules.LocalSettings
         {
             if (e is GetSettingEvent @event)
             {
-                if (@event.Input != null
-                    && !string.IsNullOrWhiteSpace(@event.Input.ModuleName)
+                if (!string.IsNullOrWhiteSpace(@event.Input.ModuleName)
                     && !string.IsNullOrWhiteSpace(@event.Input.SettingName))
                 {
                     var setting = SettingsHandler.GetSetting(@event.Input.ModuleName, @event.Input.SettingName, out bool hasSetting);
 
                     if (hasSetting)
                     {
-                        @event.Output = new GetSettingEventOutput();
-                        @event.Output.Setting = setting;
+                        @event.Output = new GetSettingEventOutput()
+                        {
+                            Setting = setting
+                        };
                         @event.Handled = true;
                     }
                     else
