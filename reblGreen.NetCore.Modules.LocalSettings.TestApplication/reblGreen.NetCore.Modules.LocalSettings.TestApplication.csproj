@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.1.2" />
+    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.1.3" />
   </ItemGroup>
 
   <ItemGroup>
