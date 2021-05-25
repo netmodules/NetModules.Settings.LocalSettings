@@ -1,4 +1,4 @@
 {
   "testInt": 10,
-  "testString": "Hello world!"
+  "testString": "Hello world! This setting is loaded from the settings file."
 }
