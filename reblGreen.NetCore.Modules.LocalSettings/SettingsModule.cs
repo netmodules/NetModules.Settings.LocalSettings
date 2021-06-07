@@ -21,7 +21,7 @@ namespace reblGreen.NetCore.Modules.LocalSettings
     /// </summary>
     [Serializable]
     [Module(
-        LoadPriority = short.MaxValue, HandlePriority = short.MinValue,
+        LoadPriority = short.MinValue, HandlePriority = short.MaxValue,
         Description = "A basic settings module which loads local configuration files into memory. This module handles "
         + "the reblGreen.NetCore.Modules.Events.GetSettingEvent and configuration files must be JSON object formatted "
         + "with a filename which starts with the module's name and has a .json extension. Multiple configuration files "
