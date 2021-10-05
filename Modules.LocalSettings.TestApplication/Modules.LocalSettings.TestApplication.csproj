@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,14 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\reblGreen.NetCore.Modules.LocalSettings\reblGreen.NetCore.Modules.LocalSettings.csproj" />
+    <ProjectReference Include="..\Modules.LocalSettings\Modules.LocalSettings.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.json">
+    <None Update="Modules.LocalSettings.SettingsModule.settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.default.json">
+    <None Update="Modules.LocalSettings.SettingsModule.settings.default.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

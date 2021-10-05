@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "reblGreen.NetCore.Modules.LocalSettings", "reblGreen.NetCore.Modules.LocalSettings\reblGreen.NetCore.Modules.LocalSettings.csproj", "{4DBDFFAC-CFAA-4D64-B860-73E4272C96D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.LocalSettings", "Modules.LocalSettings\Modules.LocalSettings.csproj", "{4DBDFFAC-CFAA-4D64-B860-73E4272C96D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reblGreen.NetCore.Modules.LocalSettings.TestApplication", "reblGreen.NetCore.Modules.LocalSettings.TestApplication\reblGreen.NetCore.Modules.LocalSettings.TestApplication.csproj", "{0C91DBBB-A456-4724-BF48-F68CBB280F03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.LocalSettings.TestApplication", "Modules.LocalSettings.TestApplication\Modules.LocalSettings.TestApplication.csproj", "{0C91DBBB-A456-4724-BF48-F68CBB280F03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

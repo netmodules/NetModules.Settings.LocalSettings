@@ -1,11 +1,13 @@
-﻿using reblGreen.Serialization;
+﻿using reblGreen;
+using reblGreen.NetCore.Modules;
+using reblGreen.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace reblGreen.NetCore.Modules.LocalSettings.Classes
+namespace Modules.LocalSettings.Classes
 {
     [Serializable]
     internal class SettingsHandler

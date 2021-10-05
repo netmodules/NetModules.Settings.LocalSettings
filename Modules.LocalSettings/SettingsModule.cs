@@ -1,15 +1,17 @@
-﻿using System;
+﻿using reblGreen;
+using reblGreen.NetCore.Modules;
+using System;
 using reblGreen.NetCore.Modules.Events;
 using reblGreen.NetCore.Modules.Interfaces;
-using reblGreen.NetCore.Modules.LocalSettings.Classes;
+using Modules.LocalSettings.Classes;
 
-namespace reblGreen.NetCore.Modules.LocalSettings
+namespace Modules.LocalSettings
 {
     /// <summary>
     /// A module which loads local settings from JSON configuration files with {ModuleName}.*.json, where * is anything such as
     /// if we were loading settings for this module the configuration filename would be
-    /// reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.json or
-    /// reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.default.json and configuration filename containing
+    /// Modules.LocalSettings.SettingsModule.settings.json or
+    /// Modules.LocalSettings.SettingsModule.settings.default.json and configuration filename containing
     /// *.default.* is loaded first, where settings are overwritten by any configuration files loaded in sequence.
     /// 
     /// This module loads with the highest priority of short.MaxValue and handles GetSettingEvent with the lowest priority of
@@ -28,8 +30,8 @@ namespace reblGreen.NetCore.Modules.LocalSettings
         + "can exist per module and settings will be merged and overwritten on a key/value basis. See AdditionalInformation.",
         AdditionalInformation = new string[]
         {
-            "An example of a configuration file naming convension: reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.json "
-            + "or reblGreen.NetCore.Modules.LocalSettings.SettingsModule.settings.default.json where a configuration file containing "
+            "An example of a configuration file naming convension: Modules.LocalSettings.SettingsModule.settings.json "
+            + "or Modules.LocalSettings.SettingsModule.settings.default.json where a configuration file containing "
             + "*.default.* would be loaded into memory first and any other configuration files for this module would be loaded and "
             + "merged with the default settings, replacing any pre-existing setting.",
             "While it is not part of JSON architecture, it is possible to add single line and multiline comments to your configuration "
@@ -81,7 +83,7 @@ namespace reblGreen.NetCore.Modules.LocalSettings
 
                         Log(LoggingEvent.Severity.Debug, message);
 
-                        @event.SetMetaValue("reblGreen.NetCore.Modules.LocalSettings.SettingsModule"
+                        @event.SetMetaValue("Modules.LocalSettings.SettingsModule"
                             , string.Format(message));
                     }
                 }
