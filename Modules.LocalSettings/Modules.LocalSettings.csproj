@@ -8,11 +8,11 @@
     <Copyright>reblGreen Software Ltd</Copyright>
     <Description>A basic settings module which loads local configuration files into memory. This module handles the reblGreen.NetCore.Modules.Events.GetSettingEvent and configuration files must be JSON object formatted with a filename which starts with the module's name and has a .json extension.</Description>
     <PackageIconUrl>https://avatars1.githubusercontent.com/u/31241141</PackageIconUrl>
-    <Version>1.1.9</Version>
+    <Version>1.2.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.1.9" />
+    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.2.3" />
     <PackageReference Include="reblGreen.Serialization.Json" Version="1.1.4" />
   </ItemGroup>
 
