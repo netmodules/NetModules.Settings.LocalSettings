@@ -1,11 +1,10 @@
-﻿using reblGreen;
-using reblGreen.NetCore.Modules;
-using System;
-using reblGreen.NetCore.Modules.Events;
-using reblGreen.NetCore.Modules.Interfaces;
-using Modules.LocalSettings.Classes;
+﻿using System;
+using NetModules;
+using NetModules.Events;
+using NetModules.Interfaces;
+using Modules.Settings.LocalSettings.Classes;
 
-namespace Modules.LocalSettings
+namespace Modules.Settings.LocalSettings
 {
     /// <summary>
     /// A module which loads local settings from JSON configuration files with {ModuleName}.*.json, where * is anything such as
@@ -24,9 +23,10 @@ namespace Modules.LocalSettings
     [Serializable]
     [Module(
         LoadFirst = true, LoadPriority = short.MinValue, HandlePriority = short.MaxValue,
-        Description = "A basic settings module which loads local configuration files into memory. This module handles "
-        + "the reblGreen.NetCore.Modules.Events.GetSettingEvent and configuration files must be JSON object formatted "
-        + "with a filename which starts with the module's name and has a .json extension. Multiple configuration files "
+        Description = "A basic settings module that loads local configuration files into memory. This module handles "
+        + "the NetModules.Events.GetSettingEvent and configuration files must be JSON object formatted "
+        + "with a filename which starts with the module's namespace followed by the module's name and ends with a .json extension. "
+        + "Multiple configuration files "
         + "can exist per module and settings will be merged and overwritten on a key/value basis. See AdditionalInformation.",
         AdditionalInformation = new string[]
         {
@@ -35,8 +35,8 @@ namespace Modules.LocalSettings
             + "*.default.* would be loaded into memory first and any other configuration files for this module would be loaded and "
             + "merged with the default settings, replacing any pre-existing setting.",
             "While it is not part of JSON architecture, it is possible to add single line and multiline comments to your configuration "
-            + "files and these comments will be stripped from the configuration file using reblGreen.Serialization.Json.MinifyJson() "
-            + "before parsing the JSON object into memory using reblGreen.Serialization.Json.ToDictionary() string extension method.",
+            + "files and these comments will be stripped from the configuration file using NetTools.Serialization.Json.MinifyJson() "
+            + "before parsing the JSON object into memory using NetTools.Serialization.Json.ToDictionary() string extension method.",
             "This module loads with the highest priority of short.MaxValue and handles GetSettingEvent with the lowest priority of "
             + "short.MinValue, this is so that the module is ready to provide settings to all other modules while they are loading "
             + "and if another module is loaded which handles GetSettingEvent, the newly loaded module would take presidence. This is "

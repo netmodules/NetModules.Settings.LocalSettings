@@ -2,24 +2,24 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <!-- Forces nuget packages to be copied to the build output directory. Required nuget package for external Modules to be loaded by ModuleHost. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="reblGreen.NetCore.Modules" Version="1.2.7" />
+    <PackageReference Include="NetModules" Version="1.2.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Modules.LocalSettings\Modules.LocalSettings.csproj" />
+    <ProjectReference Include="..\Modules.Settings.LocalSettings\Modules.Settings.LocalSettings.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Modules.LocalSettings.SettingsModule.settings.json">
+    <None Update="Modules.Settings.LocalSettings.SettingsModule.settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Modules.LocalSettings.SettingsModule.settings.default.json">
+    <None Update="Modules.Settings.LocalSettings.SettingsModule.settings.default.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

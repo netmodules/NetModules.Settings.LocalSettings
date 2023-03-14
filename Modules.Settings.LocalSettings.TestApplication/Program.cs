@@ -1,9 +1,8 @@
-﻿using reblGreen;
-using reblGreen.NetCore.Modules;
-using System;
+﻿using System;
 using System.Threading;
+using NetModules;
 
-namespace Modules.LocalSettings.TestApplication
+namespace Modules.Settings.LocalSettings.TestApplication
 {
     class Program
     {

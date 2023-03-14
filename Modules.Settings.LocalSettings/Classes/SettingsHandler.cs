@@ -1,13 +1,13 @@
-﻿using reblGreen;
-using reblGreen.NetCore.Modules;
-using reblGreen.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NetModules;
+using NetTools;
+using NetTools.Serialization;
 
-namespace Modules.LocalSettings.Classes
+namespace Modules.Settings.LocalSettings.Classes
 {
     [Serializable]
     internal class SettingsHandler
@@ -49,7 +49,7 @@ namespace Modules.LocalSettings.Classes
                         var json = LoadResourceAsString(f);
 
                         // Strips any comments and whitespace from the JSON object and converts the JSON settings file to a
-                        // dictionary using reblGreen.Serialization.Json extension method.
+                        // dictionary using NetTools.Serialization.Json extension method.
                         var moduleSettings = json.MinifyJson().ToDictionary();
 
                         if (ModuleSettings.ContainsKey(m))

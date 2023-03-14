@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>John Earnshaw</Authors>
+    <Copyright>John Earnshaw</Copyright>
+    <Description>A basic settings module that loads local configuration files into memory. This module handles the NetModules.Events.GetSettingEvent and configuration files must be JSON object formatted with a filename which starts with the module's namespace followed by the module's name and ends with a .json extension.</Description>
+    <Version>1.2.8</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetModules" Version="1.2.8" />
+    <PackageReference Include="NetTools.Serialization.Json" Version="1.1.5" />
+  </ItemGroup>
+
+</Project>
