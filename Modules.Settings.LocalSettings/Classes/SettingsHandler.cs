@@ -14,7 +14,7 @@ namespace Modules.Settings.LocalSettings.Classes
     {
         Module Module;
         Dictionary<string, Dictionary<string, object>> ModuleSettings;
-
+        List<Tuple<NetModules.Events.LoggingEvent.Severity, object[]>> Logs;
 
         /// <summary>
         /// 
@@ -51,6 +51,26 @@ namespace Modules.Settings.LocalSettings.Classes
                         // Strips any comments and whitespace from the JSON object and converts the JSON settings file to a
                         // dictionary using NetTools.Serialization.Json extension method.
                         var moduleSettings = json.MinifyJson().ToDictionary();
+
+                        if (moduleSettings == null)
+                        {
+                            if (Logs == null)
+                            {
+                                Logs = new List<Tuple<NetModules.Events.LoggingEvent.Severity, object[]>>();
+                            }
+
+                            Logs.Add(new Tuple<NetModules.Events.LoggingEvent.Severity, object[]>(NetModules.Events.LoggingEvent.Severity.Error, new object[]
+                            {
+                                $"Unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON.",
+                                f.ToString()
+                            }));
+
+                            if (System.Diagnostics.Debugger.IsAttached)
+                            {
+                                throw new FormatException($"{Module.ModuleAttributes.Name} is unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON. {f}");
+                            }
+                            continue;
+                        }
 
                         if (ModuleSettings.ContainsKey(m))
                         {
@@ -103,7 +123,7 @@ namespace Modules.Settings.LocalSettings.Classes
         /// <summary>
         /// 
         /// </summary>
-        public string LoadResourceAsString(params string[] path)
+        internal string LoadResourceAsString(params string[] path)
         {
             string file;
 
@@ -127,6 +147,21 @@ namespace Modules.Settings.LocalSettings.Classes
             }
 
             return null;
+        }
+
+        internal void FlushLoadingLogs()
+        {
+            if (Logs == null)
+            {
+                return;
+            }
+
+            foreach (var log in Logs)
+            {
+                Module.Log(log.Item1, log.Item2);
+            }
+
+            Logs = null;
         }
     }
 }

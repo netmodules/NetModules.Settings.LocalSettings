@@ -100,6 +100,7 @@ namespace Modules.Settings.LocalSettings
 
         public override void OnLoaded()
         {
+            SettingsHandler.FlushLoadingLogs();
             base.OnLoaded();
         }
 
