@@ -31,6 +31,11 @@ namespace Modules.Settings.LocalSettings.Classes
         /// </summary>
         internal void LoadJsonSettingsForKnownModules()
         {
+            if (Logs == null)
+            {
+                Logs = new List<Tuple<NetModules.Events.LoggingEvent.Severity, object[]>>();
+            }
+
             var moduleNames = Module.Host.Modules.GetModuleNames().Select(m => m.ToString());
             var files = Directory.GetFiles(Module.Host.WorkingDirectory.LocalPath, "*.json", SearchOption.AllDirectories);
 
@@ -54,11 +59,6 @@ namespace Modules.Settings.LocalSettings.Classes
 
                         if (moduleSettings == null)
                         {
-                            if (Logs == null)
-                            {
-                                Logs = new List<Tuple<NetModules.Events.LoggingEvent.Severity, object[]>>();
-                            }
-
                             Logs.Add(new Tuple<NetModules.Events.LoggingEvent.Severity, object[]>(NetModules.Events.LoggingEvent.Severity.Error, new object[]
                             {
                                 $"Unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON.",
@@ -106,9 +106,59 @@ namespace Modules.Settings.LocalSettings.Classes
         /// </summary>
         internal object GetSetting(ModuleName moduleName, string settingName, out bool hasSetting)
         {
-            if (ModuleSettings.ContainsKey(moduleName))
+            if (ModuleSettings.TryGetValue(moduleName, out var settings))
             {
-                if (ModuleSettings[moduleName].TryGetValue(settingName, out object value))
+                if (settings.TryGetValue("secureSettings", out var secureSettings)
+                    && secureSettings is List<object> secure
+                    && secure.Any(x => x.Equals(settingName)))
+                {
+                    // We use the current stacktrace string instead of new System.Diagnostics.StackTrace() so
+                    // we don't need to mess around with trying to get [External Code] entries...
+                    var callstack = Environment.StackTrace.Split("Handle").SelectMany(s => s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim('.'))).ToArray();
+                    var callingModules = Module.Host.Modules.GetModuleNames().Where(x => x != moduleName && x != Module.ModuleAttributes.Name).Where(x => callstack.Any(y => y.Contains(x, StringComparison.OrdinalIgnoreCase))).ToArray();
+                    
+                    if (callingModules.Length > 0)
+                    {
+                        var message = $"The setting with name {settingName} is included in the {moduleName} module's secure settings and cannot be read by or as part of a chain with {callingModules[0]}.";
+                        if (Logs != null)
+                        {
+                            Logs.Add(new Tuple<NetModules.Events.LoggingEvent.Severity, object[]>(NetModules.Events.LoggingEvent.Severity.Error, new object[]
+                            {
+                                message,
+                            }));
+                        }
+                        else
+                        {
+                            Module.Log(NetModules.Events.LoggingEvent.Severity.Error, message);
+                        }
+
+                        hasSetting = true;
+                        return null;
+                    }
+                    else if (!Module.Host.Arguments.Contains("no-secure-settings")
+                        && !callstack.Any(x => x.Equals(moduleName + ".OnLoading()", StringComparison.OrdinalIgnoreCase)
+                        || x.Equals(moduleName + ".OnLoaded()", StringComparison.OrdinalIgnoreCase)
+                        || x.Equals(moduleName + ".OnAllModulesLoaded()", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var message = $"The setting with name {settingName} is included in the {moduleName} module's secure settings and can only be read during the {moduleName} module's OnLoading(), OnLoaded(), and OnAllModulesLoaded() methods.";
+                        if (Logs != null)
+                        {
+                            Logs.Add(new Tuple<NetModules.Events.LoggingEvent.Severity, object[]>(NetModules.Events.LoggingEvent.Severity.Error, new object[]
+                            {
+                                message,
+                            }));
+                        }
+                        else
+                        {
+                            Module.Log(NetModules.Events.LoggingEvent.Severity.Error, message);
+                        }
+
+                        hasSetting = true;
+                        return null;
+                    }
+                }
+
+                if (settings.TryGetValue(settingName, out object value))
                 {
                     hasSetting = true;
                     return value;

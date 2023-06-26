@@ -10,7 +10,7 @@ namespace Modules.Settings.LocalSettings.TestApplication
 
         static void Main(string[] args)
         {
-            ModuleHost host = new BasicModuleHost();
+            ModuleHost host = new BasicModuleHost(new string[] { "test-settings-module" });
             host.Modules.LoadModules();
 
             var myModule = host.Modules.GetModulesByType<SettingsModule>();
@@ -19,6 +19,7 @@ namespace Modules.Settings.LocalSettings.TestApplication
             {
                 var testInt = myModule[0].GetSetting("testInt", 0);
                 var testString = myModule[0].GetSetting("testString", "This is the default value, not the settings string!");
+
 
                 if (testInt == 0)
                 {

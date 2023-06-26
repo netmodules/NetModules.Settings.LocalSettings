@@ -1,4 +1,7 @@
 ﻿{
   "testInt": 10,
   "testString": "Hello world! This setting is loaded from the settings file.",
+  "secureSettings": [
+    "testString"
+  ] 
 }

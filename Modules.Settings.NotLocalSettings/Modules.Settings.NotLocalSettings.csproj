@@ -6,7 +6,7 @@
     <Authors>John Earnshaw</Authors>
     <Copyright>John Earnshaw</Copyright>
     <Description>A basic settings module that loads local configuration files into memory. This module handles the NetModules.Events.GetSettingEvent and configuration files must be JSON object formatted with a filename which starts with the module's namespace followed by the module's name and ends with a .json extension.</Description>
-    <Version>1.2.8.3</Version>
+    <Version>1.2.8.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +14,8 @@
     <PackageReference Include="NetTools.Serialization.Json" Version="1.1.21" />
   </ItemGroup>
 
+  <ItemGroup>
+	<ProjectReference Include="..\Modules.Settings.LocalSettings\Modules.Settings.LocalSettings.csproj" />
+  </ItemGroup>
 </Project>
 

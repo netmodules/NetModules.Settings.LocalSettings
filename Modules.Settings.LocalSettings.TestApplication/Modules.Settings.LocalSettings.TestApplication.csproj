@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Settings.LocalSettings\Modules.Settings.LocalSettings.csproj" />
+	<ProjectReference Include="..\Modules.Settings.NotLocalSettings\Modules.Settings.NotLocalSettings.csproj" />
   </ItemGroup>
 
   <ItemGroup>

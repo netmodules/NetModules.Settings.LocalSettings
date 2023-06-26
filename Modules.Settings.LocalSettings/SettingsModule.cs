@@ -109,5 +109,16 @@ namespace Modules.Settings.LocalSettings
         {
             base.OnUnloading();
         }
+
+        public override void OnAllModulesLoaded()
+        {
+            base.OnAllModulesLoaded();
+
+            if (Host.Arguments.Contains("test-settings-module"))
+            {
+                Log(LoggingEvent.Severity.Debug
+                    , GetSetting("testString", "Unable to read testString from settings in OnAllModulesLoaded();"));
+            }
+        }
     }
 }
