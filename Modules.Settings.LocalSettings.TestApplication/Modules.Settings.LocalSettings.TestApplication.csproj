@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetModules" Version="1.2.8" />
-    <PackageReference Include="Modules.Logging.LocalLogging" Version="1.2.8.2" />
+    <PackageReference Include="NetModules" Version="1.3.0" />
+    <PackageReference Include="Modules.Logging.LocalLogging" Version="1.2.8.4" />
   </ItemGroup>
 
   <ItemGroup>
