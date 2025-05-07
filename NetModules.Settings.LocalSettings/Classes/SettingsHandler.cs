@@ -7,15 +7,14 @@ using NetModules;
 using NetTools;
 using NetTools.Serialization;
 
-namespace Modules.Settings.LocalSettings.Classes
+namespace NetModules.Settings.LocalSettings.Classes
 {
     [Serializable]
     internal class SettingsHandler
     {
         Module Module;
         Dictionary<string, Dictionary<string, object>> ModuleSettings;
-        List<Tuple<NetModules.Events.LoggingEvent.Severity, object[]>> Logs;
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -31,11 +30,6 @@ namespace Modules.Settings.LocalSettings.Classes
         /// </summary>
         internal void LoadJsonSettingsForKnownModules()
         {
-            if (Logs == null)
-            {
-                Logs = new List<Tuple<NetModules.Events.LoggingEvent.Severity, object[]>>();
-            }
-
             var moduleNames = Module.Host.Modules.GetModuleNames().Select(m => m.ToString());
             var files = Directory.GetFiles(Module.Host.WorkingDirectory.LocalPath, "*.json", SearchOption.AllDirectories);
 
@@ -59,16 +53,15 @@ namespace Modules.Settings.LocalSettings.Classes
 
                         if (moduleSettings == null)
                         {
-                            Logs.Add(new Tuple<NetModules.Events.LoggingEvent.Severity, object[]>(NetModules.Events.LoggingEvent.Severity.Error, new object[]
-                            {
-                                $"Unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON.",
-                                f.ToString()
-                            }));
+                            var message = $"Unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON.";
+
+                            Module.Log(Events.LoggingEvent.Severity.Error, message, f.ToString());
 
                             if (System.Diagnostics.Debugger.IsAttached)
                             {
                                 throw new FormatException($"{Module.ModuleAttributes.Name} is unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON. {f}");
                             }
+
                             continue;
                         }
 
@@ -106,8 +99,11 @@ namespace Modules.Settings.LocalSettings.Classes
         /// </summary>
         internal object GetSetting(ModuleName moduleName, string settingName, out bool hasSetting)
         {
-            if (ModuleSettings.TryGetValue(moduleName, out var settings))
+            if (ModuleSettings.TryGetValue(moduleName, out var settings)
+                && settings.TryGetValue(settingName, out object value))
             {
+                hasSetting = true;
+
                 if (settings.TryGetValue("secureSettings", out var secureSettings)
                     && secureSettings is List<object> secure
                     && secure.Any(x => x.Equals(settingName)))
@@ -120,19 +116,8 @@ namespace Modules.Settings.LocalSettings.Classes
                     if (callingModules.Length > 0)
                     {
                         var message = $"The setting with name {settingName} is included in the {moduleName} module's secure settings and cannot be read by or as part of a chain with {callingModules[0]}.";
-                        if (Logs != null)
-                        {
-                            Logs.Add(new Tuple<NetModules.Events.LoggingEvent.Severity, object[]>(NetModules.Events.LoggingEvent.Severity.Error, new object[]
-                            {
-                                message,
-                            }));
-                        }
-                        else
-                        {
-                            Module.Log(NetModules.Events.LoggingEvent.Severity.Error, message);
-                        }
-
-                        hasSetting = true;
+                        
+                        Module.Log(Events.LoggingEvent.Severity.Error, message);
                         return null;
                     }
                     else if (!Module.Host.Arguments.Contains("no-secure-settings")
@@ -140,29 +125,14 @@ namespace Modules.Settings.LocalSettings.Classes
                         || x.Equals(moduleName + ".OnLoaded()", StringComparison.OrdinalIgnoreCase)
                         || x.Equals(moduleName + ".OnAllModulesLoaded()", StringComparison.OrdinalIgnoreCase)))
                     {
-                        var message = $"The setting with name {settingName} is included in the {moduleName} module's secure settings and can only be read during the {moduleName} module's OnLoading(), OnLoaded(), and OnAllModulesLoaded() methods.";
-                        if (Logs != null)
-                        {
-                            Logs.Add(new Tuple<NetModules.Events.LoggingEvent.Severity, object[]>(NetModules.Events.LoggingEvent.Severity.Error, new object[]
-                            {
-                                message,
-                            }));
-                        }
-                        else
-                        {
-                            Module.Log(NetModules.Events.LoggingEvent.Severity.Error, message);
-                        }
-
-                        hasSetting = true;
+                        var message = $"The setting with name {settingName} is included in the {moduleName} module's secure settings and can only be read during the {moduleName} module's OnLoading(), OnLoaded(), and/or OnAllModulesLoaded() methods.";
+                        
+                        Module.Log(Events.LoggingEvent.Severity.Error, message);
                         return null;
                     }
                 }
 
-                if (settings.TryGetValue(settingName, out object value))
-                {
-                    hasSetting = true;
-                    return value;
-                }
+                return value;
             }
 
             hasSetting = false;
@@ -197,21 +167,6 @@ namespace Modules.Settings.LocalSettings.Classes
             }
 
             return null;
-        }
-
-        internal void FlushLoadingLogs()
-        {
-            if (Logs == null)
-            {
-                return;
-            }
-
-            foreach (var log in Logs)
-            {
-                Module.Log(log.Item1, log.Item2);
-            }
-
-            Logs = null;
         }
     }
 }

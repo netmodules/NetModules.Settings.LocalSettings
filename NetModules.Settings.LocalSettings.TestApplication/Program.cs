@@ -2,7 +2,7 @@
 using System.Threading;
 using NetModules;
 
-namespace Modules.Settings.LocalSettings.TestApplication
+namespace NetModules.Settings.LocalSettings.TestApplication
 {
     class Program
     {
@@ -18,6 +18,9 @@ namespace Modules.Settings.LocalSettings.TestApplication
             if (myModule.Count > 0)
             {
                 var testInt = myModule[0].GetSetting("testInt", 0);
+
+                // This setting can not be read here because it is in the settings module's secureSettins array
+                // in the example settings JSON file in this project.
                 var testString = myModule[0].GetSetting("testString", "This is the default value, not the settings string!");
 
 

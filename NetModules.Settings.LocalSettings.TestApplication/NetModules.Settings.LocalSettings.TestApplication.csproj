@@ -8,20 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetModules" Version="1.3.0" />
-    <PackageReference Include="Modules.Logging.LocalLogging" Version="1.2.8.4" />
+    <PackageReference Include="NetModules" Version="1.3.7" />
+    <!--<PackageReference Include="NetModules.Logging.LocalLogging" Version="1.3.7" />-->
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Modules.Settings.LocalSettings\Modules.Settings.LocalSettings.csproj" />
-	<ProjectReference Include="..\Modules.Settings.NotLocalSettings\Modules.Settings.NotLocalSettings.csproj" />
+    <ProjectReference Include="..\NetModules.Settings.LocalSettings\NetModules.Settings.LocalSettings.csproj" />
+	<ProjectReference Include="..\NetModules.Settings.NotLocalSettings\NetModules.Settings.NotLocalSettings.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Modules.Settings.LocalSettings.SettingsModule.settings.json">
+    <None Update="NetModules.Settings.LocalSettings.SettingsModule.settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Modules.Settings.LocalSettings.SettingsModule.settings.default.json">
+    <None Update="NetModules.Settings.LocalSettings.SettingsModule.settings.default.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

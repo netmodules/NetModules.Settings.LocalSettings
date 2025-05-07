@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Settings.LocalSettings", "Modules.Settings.LocalSettings\Modules.Settings.LocalSettings.csproj", "{4DBDFFAC-CFAA-4D64-B860-73E4272C96D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetModules.Settings.LocalSettings", "NetModules.Settings.LocalSettings\NetModules.Settings.LocalSettings.csproj", "{4DBDFFAC-CFAA-4D64-B860-73E4272C96D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Settings.NotLocalSettings", "Modules.Settings.NotLocalSettings\Modules.Settings.NotLocalSettings.csproj", "{4F702F8B-C054-47A3-BBB4-E8FB72B728DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetModules.Settings.NotLocalSettings", "NetModules.Settings.NotLocalSettings\NetModules.Settings.NotLocalSettings.csproj", "{4F702F8B-C054-47A3-BBB4-E8FB72B728DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Settings.LocalSettings.TestApplication", "Modules.Settings.LocalSettings.TestApplication\Modules.Settings.LocalSettings.TestApplication.csproj", "{0C91DBBB-A456-4724-BF48-F68CBB280F03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetModules.Settings.LocalSettings.TestApplication", "NetModules.Settings.LocalSettings.TestApplication\NetModules.Settings.LocalSettings.TestApplication.csproj", "{0C91DBBB-A456-4724-BF48-F68CBB280F03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

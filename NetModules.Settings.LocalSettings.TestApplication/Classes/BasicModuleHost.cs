@@ -1,6 +1,6 @@
 ﻿using NetModules;
 
-namespace Modules.Settings.LocalSettings.TestApplication
+namespace NetModules.Settings.LocalSettings.TestApplication
 {
     class BasicModuleHost : ModuleHost
     {

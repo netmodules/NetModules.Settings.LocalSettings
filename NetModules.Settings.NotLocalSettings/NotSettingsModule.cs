@@ -2,15 +2,15 @@
 using NetModules;
 using NetModules.Events;
 using NetModules.Interfaces;
-using Modules.Settings.LocalSettings;
+using NetModules.Settings.LocalSettings;
 
-namespace Modules.Settings.NotLocalSettings
+namespace NetModules.Settings.NotLocalSettings
 {
     /// <summary>
     /// A module which loads local settings from JSON configuration files with {ModuleName}.*.json, where * is anything such as
     /// if we were loading settings for this module the configuration filename would be
-    /// Modules.LocalSettings.SettingsModule.settings.json or
-    /// Modules.LocalSettings.SettingsModule.settings.default.json and configuration filename containing
+    /// NetModules.LocalSettings.SettingsModule.settings.json or
+    /// NetModules.LocalSettings.SettingsModule.settings.default.json and configuration filename containing
     /// *.default.* is loaded first, where settings are overwritten by any configuration files loaded in sequence.
     /// 
     /// This module loads with the highest priority of short.MaxValue and handles GetSettingEvent with the lowest priority of

@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<Authors>John Earnshaw</Authors>
+	<Company>NetModules Foundation</Company>
+	<Copyright>NetModules Foundation</Copyright>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+	<RepositoryType>Git</RepositoryType>
+	<RepositoryUrl>https://github.com/netmodules/NetModules.Settings.LocalSettings</RepositoryUrl>
+	<PackageProjectUrl>https://netmodules.net/</PackageProjectUrl>
+	<Description>A basic settings module that loads local configuration files into memory. This module handles the NetModules.Events.GetSettingEvent event. Configuration files must be JSON object formatted with a filename that starts with the module's namespace, followed by the module's name, and ending with a .json extension.</Description>
+    <Version>1.3.7</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetModules" Version="1.3.7" />
+    <PackageReference Include="NetTools.Serialization.Json" Version="1.1.39" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NetModules.Settings.LocalSettings.ExampleModule.settings.default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <Pack>true</Pack>
+	  <PackageCopyToOutput>true</PackageCopyToOutput>
+    </None>
+    <None Update="NetModules.Settings.LocalSettings.ExampleModule.settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <Pack>true</Pack>
+	  <PackageCopyToOutput>true</PackageCopyToOutput>
+	</None>
+  </ItemGroup>
+
+  <ItemGroup>
+	<None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+	
+</Project>
+

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetModules" Version="1.3.7" />
+    <PackageReference Include="NetTools.Serialization.Json" Version="1.1.39" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\NetModules.Settings.LocalSettings\NetModules.Settings.LocalSettings.csproj" />
+  </ItemGroup>
+</Project>
+
