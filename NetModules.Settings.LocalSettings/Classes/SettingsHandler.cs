@@ -104,12 +104,16 @@ namespace NetModules.Settings.LocalSettings.Classes
             {
                 hasSetting = true;
 
+                // Placing setting keys within a "secureSettings" array is a way to prevent other modules
+                // from reading the setting value unless they are part of the module's loading process.
+                // This adds an additional level of security to the settings module and prevents other modules
+                // from accessing sensitive information.
                 if (settings.TryGetValue("secureSettings", out var secureSettings)
                     && secureSettings is List<object> secure
                     && secure.Any(x => x.Equals(settingName)))
                 {
                     // We use the current stacktrace string instead of new System.Diagnostics.StackTrace() so
-                    // we don't need to mess around with trying to get [External Code] entries...
+                    // that we don't need to mess around with trying to get [External Code] entries...
                     var callstack = Environment.StackTrace.Split("Handle").SelectMany(s => s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim('.'))).ToArray();
                     var callingModules = Module.Host.Modules.GetModuleNames().Where(x => x != moduleName && x != Module.ModuleAttributes.Name).Where(x => callstack.Any(y => y.Contains(x, StringComparison.OrdinalIgnoreCase))).ToArray();
                     

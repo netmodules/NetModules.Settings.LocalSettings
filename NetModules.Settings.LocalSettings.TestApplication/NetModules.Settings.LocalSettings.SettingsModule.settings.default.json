@@ -1,5 +1,5 @@
 ﻿{
-  // This is a test integer which shoulg be replaced by the testInt property in settings.json
+  // This is a test integer which should be replaced by the testInt property in settings.json
   // when SettingsModule parses each settings file in order starting with settings.default.json
   "testInt": 1
   /*

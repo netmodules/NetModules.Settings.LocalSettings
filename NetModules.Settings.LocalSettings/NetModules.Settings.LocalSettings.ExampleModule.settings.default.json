@@ -1,9 +1,80 @@
 ﻿{
-  // This is a test integer which shoulg be replaced by the testInt property in settings.json
-  // when SettingsModule parses each settings file in order starting with settings.default.json
-  "testInt": 1
   /*
-    Comments are removed from JSON configuration files by SettingModule. This enables the module
-    creator to be verbose about their module's configuration settings.
-   */
+    NetModules.Settings.LocalSettings.ExampleModule.settings.default.json
+    ---------------------------------------------------------------------
+    This file contains documentation for how to create a settings file for a NetTools module that
+    can be loaded by the NetModules.Settings.LocalSettings module.
+    
+    When creating a module, it may be a requirement that your module can be configured by the user.
+    NetModules offers an internal GetSettingEvent event, along with a wrapper method, that can be
+    used to retrieve a setting within a module.
+
+    https://github.com/netmodules/NetModules/blob/main/NetModules/Events/GetSettingEvent.cs
+    https://github.com/netmodules/NetModules/blob/main/NetModules/Interfaces/IModule.cs#L71
+
+    Any module can be created to become a handler for a GetSettingEvent, and
+    NetModules.Settings.LocalSettings module is one of those modules. It is a basic example of how
+    to create a module that can be used to load settings from a JSON file, and serve these settings
+    to other modules on request. You could write a module that loads settings from a database as an
+    alternative to this module, or to work alongside it
+
+    If a GetSettingEvent handling module is not installed in your project, a module should assign
+    its own default settings, and it is good practice for a module to include a settings file
+    containing documented settings that match these default values.
+    
+    The default settings file should be named using using the following format:
+    ModuleNamespace.ModuleName.settings.default.json, here is an example using the LocalLogging
+    module settings file naming...
+
+    NetModules.Logging.LocalLogging.LoggingModule.settings.default.json
+    https://github.com/netmodules/NetModules.Logging.LocalLogging/blob/master/NetModules.Logging.LocalLogging/NetModules.Logging.LocalLogging.LoggingModule.settings.default.json
+    
+    To replace the default settings at runtime you would create a file named:
+    
+    NetModules.Logging.LocalLogging.LoggingModule.settings.json
+  
+    And change any settings accordingly...
+  */
+
+  /*
+    Comments are removed from JSON configuration files by SettingModule when reading settings to
+    create a valid JSON file. This enables a module creator to be verbose about their module's
+    configuration settings.
+  */
+
+  /*
+    A module requests a setting using a key name for the required setting...
+
+    Settings should be defined by a key/value pair, where the key is the name of the setting, and
+    the value is the actual setting. The value can be a string, number, boolean, array, or object
+    as defined by JSON. A module will request a setting by its key name where required, and will
+    handle the format and parsing of the setting as required.
+  */
+
+  "thisIsTrue": true,
+  "hello": "world!",
+
+  /*
+    A module would then request a setting using the following code...
+  
+    var setting = this.GetSetting("thisIsTrue", false);
+
+    Where the default value would be false if the setting was not found or the GetSettingEvent was
+    not handled. E.g. There is no GetSettingEvent handler module installed.
+  */
+
+  /*
+    NetModules.Settings.LocalSettings has an implementation for keeping secure settings in a
+    module's settings file and disallowing access to these settings by other modules. This is
+    done by defining a setting as a secure setting, by including its key name in a secureSettings
+    array within the settings file. See the example below.
+
+    Secure settings can only be accessed by the module that defines them inside the module's
+    OnLoading(), OnLoaded(), and OnAllModulesLoaded() methods.
+  */
+
+  "exampleSetting": "This is an example setting...",
+  "secureSettings": [
+    "exampleSetting"
+  ]
 }

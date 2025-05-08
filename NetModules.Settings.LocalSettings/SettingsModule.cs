@@ -80,29 +80,32 @@ namespace NetModules.Settings.LocalSettings
         /// </summary>
         public override void Handle(IEvent e)
         {
-            if (e is GetSettingEvent @event)
+            if (e is GetSettingEvent getSetting)
             {
-                if (!string.IsNullOrWhiteSpace(@event.Input.ModuleName)
-                    && !string.IsNullOrWhiteSpace(@event.Input.SettingName))
+                if (!string.IsNullOrWhiteSpace(getSetting.Input.ModuleName)
+                    && !string.IsNullOrWhiteSpace(getSetting.Input.SettingName))
                 {
-                    var setting = SettingsHandler.GetSetting(@event.Input.ModuleName, @event.Input.SettingName, out bool hasSetting);
+                    var setting = SettingsHandler.GetSetting(getSetting.Input.ModuleName
+                        , getSetting.Input.SettingName
+                        , out bool hasSetting);
 
                     if (hasSetting)
                     {
-                        @event.Output = new GetSettingEventOutput()
+                        getSetting.Output = new GetSettingEventOutput()
                         {
                             Setting = setting
                         };
-                        @event.Handled = true;
+
+                        getSetting.Handled = true;
                     }
                     else
                     {
                         var message = string.Format("Setting with name {0} not found for module {1}"
-                            , @event.Input.SettingName, @event.Input.ModuleName);
+                            , getSetting.Input.SettingName, getSetting.Input.ModuleName.ToString());
 
-                        Log(LoggingEvent.Severity.Debug, message);
+                        Log(LoggingEvent.Severity.Trace, message);
 
-                        @event.SetMetaValue("NetModules.LocalSettings.SettingsModule"
+                        getSetting.SetMetaValue("NetModules.LocalSettings.SettingsModule"
                             , string.Format(message));
                     }
                 }
