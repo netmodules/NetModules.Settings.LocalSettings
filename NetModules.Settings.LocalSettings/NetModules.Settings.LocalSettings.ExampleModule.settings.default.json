@@ -22,9 +22,19 @@
     its own default settings, and it is good practice for a module to include a settings file
     containing documented settings that match these default values.
     
+    Any module that includes support for this module should include a default settings file that
+    explains any existing settings and their default values. This is a good practice for any module
+    that contains any adjustable settings.
+    
     The default settings file should be named using using the following format:
-    ModuleNamespace.ModuleName.settings.default.json, here is an example using the LocalLogging
-    module settings file naming...
+    
+    YourModule.ModuleAttributes.Name.settings.default.json
+
+    or generally (if using NetModules.Module):
+
+    YourModuleNamespace.YourModuleClassName.settings.default.json.
+  
+    Here is an example using the LocalLogging module settings file naming...
 
     NetModules.Logging.LocalLogging.LoggingModule.settings.default.json
     https://github.com/netmodules/NetModules.Logging.LocalLogging/blob/master/NetModules.Logging.LocalLogging/NetModules.Logging.LocalLogging.LoggingModule.settings.default.json
@@ -33,7 +43,10 @@
     
     NetModules.Logging.LocalLogging.LoggingModule.settings.json
   
-    And change any settings accordingly...
+    And change any default settings (and remove any comments if you like) accordingly...
+
+    This way, any default settings that are included with a module can remain in place with any
+    included documentation so you always have a reference, if making any future changes.
   */
 
   /*
@@ -55,7 +68,7 @@
   "hello": "world!",
 
   /*
-    A module would then request a setting using the following code...
+    A module will then request a setting using the following code...
   
     var setting = this.GetSetting("thisIsTrue", false);
 
@@ -73,8 +86,8 @@
     OnLoading(), OnLoaded(), and OnAllModulesLoaded() methods.
   */
 
-  "exampleSetting": "This is an example setting...",
+  "secureExample": "This setting can only be read by the named module in OnLoading(), OnLoaded(), and OnAllModulesLoaded() methods...",
   "secureSettings": [
-    "exampleSetting"
+    "secureExample"
   ]
 }

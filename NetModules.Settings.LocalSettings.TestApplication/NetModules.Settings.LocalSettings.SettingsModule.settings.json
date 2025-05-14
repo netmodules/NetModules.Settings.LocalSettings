@@ -1,7 +1,9 @@
 ﻿{
+  // The settings in this file are used only in the TestApplication project!!!
+
   "testInt": 10,
-  "testString": "Hello world! This setting is loaded from the settings file.",
+  "testString": "Hello world! This setting is loaded from the overridden settings file.",
   "secureSettings": [
     "testString"
-  ] 
+  ]
 }

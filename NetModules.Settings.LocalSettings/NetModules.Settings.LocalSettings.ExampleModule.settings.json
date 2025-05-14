@@ -2,13 +2,13 @@
   /*
     NetModules.Settings.LocalSettings.ExampleModule.settings.json
     ---------------------------------------------------------------------
-    See NetModules.Settings.LocalSettings.ExampleModule.settings.json for explanation...
+    See NetModules.Settings.LocalSettings.ExampleModule.settings.default.json for explanation...
   */
-  
+
   "thisIsTrue": true,
-  "hello": "world!",
-  "exampleSetting": "This is an example setting...",
+  "hello": "world!!!",
+  "secureExample": "This setting can only be read by the named module in OnLoading(), OnLoaded(), and OnAllModulesLoaded() methods...",
   "secureSettings": [
-    "exampleSetting"
+    "secureExample"
   ]
 }

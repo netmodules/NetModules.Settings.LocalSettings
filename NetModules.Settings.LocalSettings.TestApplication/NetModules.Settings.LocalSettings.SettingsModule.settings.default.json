@@ -1,9 +1,14 @@
 ﻿{
+  // The settings in this file are used only in the TestApplication project!!!
+
   // This is a test integer which should be replaced by the testInt property in settings.json
   // when SettingsModule parses each settings file in order starting with settings.default.json
-  "testInt": 1
-  /*
-    Comments are removed from JSON configuration files by SettingModule. This enables the module
-    creator to be verbose about their module's configuration settings.
-   */
+  "testInt": 1,
+
+  // A test string which should be replaced by the testString property in settings.json
+  "testString": "Hello world! This setting is loaded from the default settings file.",
+
+  "secureSettings": [
+    "testString"
+  ]
 }

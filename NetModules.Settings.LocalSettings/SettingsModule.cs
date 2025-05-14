@@ -124,7 +124,6 @@ namespace NetModules.Settings.LocalSettings
             }
 
             SettingsHandler = new SettingsHandler(this);
-            SettingsHandler.LoadJsonSettingsForKnownModules();
             base.OnLoading();
         }
 

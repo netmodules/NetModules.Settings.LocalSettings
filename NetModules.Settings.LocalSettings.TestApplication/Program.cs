@@ -19,9 +19,9 @@ namespace NetModules.Settings.LocalSettings.TestApplication
             {
                 var testInt = myModule[0].GetSetting("testInt", 0);
 
-                // This setting can not be read here because it is in the settings module's secureSettins array
+                // This setting can not be read here because it is in the settings module's secureSettings array
                 // in the example settings JSON file in this project.
-                var testString = myModule[0].GetSetting("testString", "This is the default value, not the settings string!");
+                var testString = myModule[0].GetSetting("testString", "This is the default value, not the settings value!");
 
 
                 if (testInt == 0)

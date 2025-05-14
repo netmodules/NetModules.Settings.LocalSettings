@@ -22,6 +22,8 @@ namespace NetModules.Settings.LocalSettings.Classes
         {
             Module = module;
             ModuleSettings = new Dictionary<string, Dictionary<string, object>>();
+
+            LoadJsonSettingsForKnownModules();
         }
 
 
@@ -30,10 +32,15 @@ namespace NetModules.Settings.LocalSettings.Classes
         /// </summary>
         internal void LoadJsonSettingsForKnownModules()
         {
+            // This should return a list of all module names known to this.Host whether they
+            // are loaded or not.
             var moduleNames = Module.Host.Modules.GetModuleNames().Select(m => m.ToString());
             var files = Directory.GetFiles(Module.Host.WorkingDirectory.LocalPath, "*.json", SearchOption.AllDirectories);
 
-            files = files.Where(f => moduleNames.Any(m => Path.GetFileNameWithoutExtension(f).StartsWith(m, StringComparison.OrdinalIgnoreCase))).ToArray();
+            if (files == null || files.Length == 0)
+            {
+                return;
+            }
 
             foreach (var m in moduleNames)
             {
@@ -41,53 +48,55 @@ namespace NetModules.Settings.LocalSettings.Classes
                 var settings = files.Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(m, StringComparison.OrdinalIgnoreCase))
                     .OrderByDescending(f => f.IndexOf(".default.", StringComparison.OrdinalIgnoreCase) > -1);
 
-                if (settings != null && settings.Count() > 0)
+                if (settings == null || settings.Count() == 0)
                 {
-                    foreach (var f in settings)
+                    return;
+                }
+
+                foreach (var f in settings)
+                {
+                    var json = LoadResourceAsString(f);
+
+                    // Strip any comments and whitespace from the JSON object and converts the JSON settings file to a
+                    // dictionary using NetTools.Serialization.Json extension method.
+                    var moduleSettings = json.MinifyJson().ToDictionary();
+
+                    if (moduleSettings == null)
                     {
-                        var json = LoadResourceAsString(f);
+                        var message = $"Unable to read settings file for module. If this is a settings file, it may contain invalid characters or malformed JSON.";
 
-                        // Strips any comments and whitespace from the JSON object and converts the JSON settings file to a
-                        // dictionary using NetTools.Serialization.Json extension method.
-                        var moduleSettings = json.MinifyJson().ToDictionary();
-
-                        if (moduleSettings == null)
+                        if (System.Diagnostics.Debugger.IsAttached)
                         {
-                            var message = $"Unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON.";
-
                             Module.Log(Events.LoggingEvent.Severity.Error, message, f.ToString());
-
-                            if (System.Diagnostics.Debugger.IsAttached)
-                            {
-                                throw new FormatException($"{Module.ModuleAttributes.Name} is unable to read settings file for module {m}. Settings file may contain invalid characters or malformed JSON. {f}");
-                            }
-
                             continue;
                         }
 
-                        if (ModuleSettings.ContainsKey(m))
+                        Module.Log(Events.LoggingEvent.Severity.Trace, message, f.ToString());
+                        continue;
+                    }
+
+                    if (ModuleSettings.ContainsKey(m))
+                    {
+                        foreach(var kv in moduleSettings)
                         {
-                            foreach(var kv in moduleSettings)
+                            // We check here to see if the setting already exists and if it does then we update it,
+                            // otherwise we add it to the settings for the current module
+                            if (ModuleSettings[m].ContainsKey(kv.Key))
                             {
-                                // We check here to see if the setting already exists and if it does then we update it,
-                                // otherwise we add it to the settings for the current module
-                                if (ModuleSettings[m].ContainsKey(kv.Key))
-                                {
-                                    ModuleSettings[m][kv.Key] = kv.Value;
-                                }
-                                else
-                                {
-                                    // No existing setting to update so just add it as a new setting...
-                                    ModuleSettings[m].Add(kv.Key, kv.Value);
-                                }
+                                ModuleSettings[m][kv.Key] = kv.Value;
+                            }
+                            else
+                            {
+                                // No existing setting to update so just add it as a new setting...
+                                ModuleSettings[m].Add(kv.Key, kv.Value);
                             }
                         }
-                        else
-                        {
-                            // There are no other settings for the current module name so we can just add the settings here,
-                            // no need to merge...
-                            ModuleSettings.Add(m, moduleSettings);
-                        }
+                    }
+                    else
+                    {
+                        // There are no other settings for the current module name so we can just add the settings here,
+                        // no need to merge...
+                        ModuleSettings.Add(m, moduleSettings);
                     }
                 }
             }
@@ -114,7 +123,9 @@ namespace NetModules.Settings.LocalSettings.Classes
                 {
                     // We use the current stacktrace string instead of new System.Diagnostics.StackTrace() so
                     // that we don't need to mess around with trying to get [External Code] entries...
-                    var callstack = Environment.StackTrace.Split("Handle").SelectMany(s => s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim('.'))).ToArray();
+                    var callstack = Environment.StackTrace
+                        .Split(nameof(Module.Handle))
+                        .SelectMany(s => s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim('.'))).ToArray();
                     var callingModules = Module.Host.Modules.GetModuleNames().Where(x => x != moduleName && x != Module.ModuleAttributes.Name).Where(x => callstack.Any(y => y.Contains(x, StringComparison.OrdinalIgnoreCase))).ToArray();
                     
                     if (callingModules.Length > 0)
@@ -125,11 +136,11 @@ namespace NetModules.Settings.LocalSettings.Classes
                         return null;
                     }
                     else if (!Module.Host.Arguments.Contains("no-secure-settings")
-                        && !callstack.Any(x => x.Equals(moduleName + ".OnLoading()", StringComparison.OrdinalIgnoreCase)
-                        || x.Equals(moduleName + ".OnLoaded()", StringComparison.OrdinalIgnoreCase)
-                        || x.Equals(moduleName + ".OnAllModulesLoaded()", StringComparison.OrdinalIgnoreCase)))
+                        && !callstack.Any(x => x.Equals($"{moduleName}.{nameof(Module.OnLoading)}()", StringComparison.OrdinalIgnoreCase)
+                        || x.Equals($"{moduleName}.{nameof(Module.OnLoaded)}()", StringComparison.OrdinalIgnoreCase)
+                        || x.Equals($"{moduleName}.{nameof(Module.OnAllModulesLoaded)}()", StringComparison.OrdinalIgnoreCase)))
                     {
-                        var message = $"The setting with name {settingName} is included in the {moduleName} module's secure settings and can only be read during the {moduleName} module's OnLoading(), OnLoaded(), and/or OnAllModulesLoaded() methods.";
+                        var message = $"The setting with name {settingName} is included in the {moduleName} module's secure settings and can only be read during the {moduleName} module's {nameof(Module.OnLoading)}, {nameof(Module.OnLoaded)}, and/or {nameof(Module.OnAllModulesLoaded)} methods.";
                         
                         Module.Log(Events.LoggingEvent.Severity.Error, message);
                         return null;
