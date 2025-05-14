@@ -32,8 +32,6 @@ Install-Package NetModules.Settings.LocalSettings
 
 When you load modules using [ModuleHost.Modules.LoadModules();](https://github.com/netmodules/NetModules/tree/main?tab=readme-ov-file#creating-and-loading-a-module-host), NetModules.Settings.LocalSettings will be loaded and ready to serve settings to other modules.
 
-When you load modules using [ModuleHost.Modules.LoadModules();](https://github.com/netmodules/NetModules/tree/main?tab=readme-ov-file#creating-and-loading-a-module-host), NetModules.Settings.LocalSettings will be loaded and ready to serve settings to other modules.
-
 ## Quick Examples
 
 ### Create a Default Settings File  
