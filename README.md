@@ -4,9 +4,14 @@
 
 It is designed to load and return configuration settings for other modules from a local file if a NetModules module raises a [GetSettingEvent](https://github.com/netmodules/NetModules/blob/main/NetModules/Events/GetSettingEvent.cs) or uses its [GetSetting(settingName, defaultValue)](https://github.com/netmodules/NetModules/blob/master/NetModules/Interfaces/IModule.cs#L71) wrapper method. The settings are stored in a JSON file and loaded using [NetTools.Serialization.Json](https://github.com/netmodules/NetTools.Serialization.Json). NetTools.Serialization.Json allows line comments in JSON so you can add descriptions and documentation, while JSON makes configuration files easy to read and modify.
 
-When added to your project, this module is set to `AutoLoad` and `LoadFirst`, with a high `LoadPriority` and a lowest `HandlePriority`.
+> [!NOTE]  
+> A Module doesn't need to worry about how settings are provided unless it's a settings provider Module!
 
-This means that the module should be ready to serve required settings to other modules while they are loading, and if another settings provider module is loaded with a higher `HandlePriority`, it will override the settings provided by this module. This allows for a flexible and extensible settings architecture, where multiple modules can provide settings, and the most appropriate one will be used based on priority.
+When added to your project, this module is attributed with `AutoLoad` and `LoadFirst`, a high `LoadPriority` and a lowest `HandlePriority`.
+
+See [NetModules.Interfaces.IModuleAttribute](https://github.com/netmodules/NetModules/blob/main/NetModules/Interfaces/IModuleAttribute.cs) and [NetModules.Attributes.ModuleAttribute](https://github.com/netmodules/NetModules/blob/main/NetModules/Attributes/ModuleAttribute.cs) for detailed explanation regarding module attributes.
+
+This means that the module should be ready to serve required settings to other modules while they are loading, and if another settings provider module is loaded with a higher `HandlePriority`, it will override the settings provided by this module. This allows for a flexible and extensible settings architecture, where multiple modules can provide settings, and the most appropriate module will be used based on priority.
 
 ## Features
 
@@ -27,23 +32,70 @@ Install-Package NetModules.Settings.LocalSettings
 
 When you load modules using [ModuleHost.Modules.LoadModules();](https://github.com/netmodules/NetModules/tree/main?tab=readme-ov-file#creating-and-loading-a-module-host), NetModules.Settings.LocalSettings will be loaded and ready to serve settings to other modules.
 
-### Quick Examples
+When you load modules using [ModuleHost.Modules.LoadModules();](https://github.com/netmodules/NetModules/tree/main?tab=readme-ov-file#creating-and-loading-a-module-host), NetModules.Settings.LocalSettings will be loaded and ready to serve settings to other modules.
 
-#### Adding a Local Settings File
+## Quick Examples
 
-```csharp
-using System;
-using NetTools.Logging;
+### Create a Default Settings File  
 
-// This is an incredibly simple implementation of the ILogger interface.
-public class ConsoleLogger : ILogger
+If you are implementing user defined settings in your own module, and would like to add support for NetModules.Settings.LocalSettings, you should include a default settings file with your module. This file will be used to create a new settings file if one does not exist. The default settings file should be named `settings.json` and placed in the root of your module project.
+
+```json
 {
-    public void Error(params object[] args) => Console.WriteLine($"[ERROR] {string.Join(" ", args)}");
-    public void Analytic(params object[] args) => Console.WriteLine($"[ANALYTIC] {string.Join(" ", args)}");
-    public void Information(params object[] args) => Console.WriteLine($"[INFO] {string.Join(" ", args)}");
-    public void Debug(params object[] args) => Console.WriteLine($"[DEBUG] {string.Join(" ", args)}");
+  // Comments are supported to explain your default settings.
+  "mySetting": "Default Value",
+  "myOtherSetting": 42
 }
 ```
+
+you can request a setting from your module using the `GetSetting` method:
+
+```csharp
+var mySetting = this.GetSetting("mySetting", "Default Value");
+```
+
+If you are packaging your module for distribution, you should include the `settings` file in your NuGet package. This will ensure that the default settings file is included when your module is installed. You can do this by adding the file to your `nuspec` or `csproj` file.
+
+```xml
+<ItemGroup>
+    <None Update="ExampleModuleNamespace.ExampleModuleName.settings.default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <Pack>true</Pack>
+	  <PackageCopyToOutput>true</PackageCopyToOutput>
+    </None>
+  </ItemGroup>
+```
+
+### Overriding a Local Default Settings File
+
+If you wish to override the default settings file with a local settings file, you can create a `settings` file in the root of your module host project. This file will be used to override the default settings file when the module is loaded.
+
+E.g. `ExampleModuleNamespace.ExampleModuleName.settings.json`
+
+```json
+{
+  "mySetting": "Overridden Value",
+  "myOtherSetting": 100
+}
+```
+
+### Handling Secure Settings
+
+Add sensitive settings to a `"secureSettings"` array in your `settings` file:
+
+```json
+{
+  "apiKey": "Super-Secret-Key",
+  "secureSettings": ["apiKey"]
+}
+```
+
+>[!TIP]
+>- Always include a default settings file to document available configurations.
+>- Use secure settings for sensitive data to help restrict unauthorized access if needed.
+>- Consider alternative settings storage/retrieval solutions (e.g. Remote database, secure/cloud storage, etc...).
+>- For more reference on implementation, refer to the other [NetModules repositories](https://github.com/orgs/netmodules/repositories).
+
 
 ## Contributing
 
