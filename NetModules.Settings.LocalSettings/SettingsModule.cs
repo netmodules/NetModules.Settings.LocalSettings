@@ -24,7 +24,7 @@ namespace NetModules.Settings.LocalSettings
     [Serializable]
     [Module(
         LoadFirst = true,
-        LoadPriority = short.MinValue / 2,
+        LoadPriority = short.MinValue,
         HandlePriority = short.MaxValue,
         Description = Constants.ModuleDescription,
         AdditionalInformation = new string[]

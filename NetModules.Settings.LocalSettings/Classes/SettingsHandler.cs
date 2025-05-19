@@ -50,7 +50,7 @@ namespace NetModules.Settings.LocalSettings.Classes
 
                 if (settings == null || settings.Count() == 0)
                 {
-                    return;
+                    continue;
                 }
 
                 foreach (var f in settings)
